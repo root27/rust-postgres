@@ -1,5 +1,4 @@
-use actix_web::{web,App, HttpServer, Responder, HttpResponse};
-use serde_json::json;
+use actix_web::{web,App, HttpServer};
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
 mod models;
@@ -12,29 +11,6 @@ use handlers::*;
 pub struct AppState {
     db: Pool<Postgres>
 }
-
-
-
-
-
-
-
-
-async fn hello() -> impl Responder {
-
-    HttpResponse::Ok().json(json!({
-        "status": "Running"
-    }))
-
-
-
-
-}
-
-
-
-
-
 
 
 
@@ -57,15 +33,6 @@ async fn main() -> std::io::Result<()>  {
                 panic!("Failed to connect to Postgres: {:?}", e);
             }
         };
-
-    
-
-
-
-
-
-
-
     
 
     println!("Server is running at port 8080");
@@ -75,7 +42,6 @@ async fn main() -> std::io::Result<()>  {
     HttpServer::new(move || {
         App::new()
         .app_data(web::Data::new(AppState { db: pool.clone() }))
-        .route("/", web::get().to(hello))
         .route("/create", web::post().to(create))
         .route("/get_all", web::get().to(get_all))
         .route("/get/{id}", web::get().to(get))
